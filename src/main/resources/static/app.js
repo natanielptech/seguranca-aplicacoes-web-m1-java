@@ -2,6 +2,7 @@ const tema = document.querySelector("#tema");
 const mensagem = document.querySelector("#mensagem");
 const usuario = document.querySelector("#usuario");
 const senha = document.querySelector("#senha");
+const senhasDemo = { leitor: "leitor123", admin: "admin123" };
 const placeholder = document.querySelector("#response-placeholder");
 const resultado = document.querySelector("#response-result");
 const methodOutput = document.querySelector("#response-method");
@@ -9,6 +10,10 @@ const urlOutput = document.querySelector("#response-url");
 const statusOutput = document.querySelector("#response-status");
 const bodyOutput = document.querySelector("#response-body");
 const buttons = [...document.querySelectorAll("button")];
+
+usuario.addEventListener("change", () => {
+    senha.value = senhasDemo[usuario.value];
+});
 
 document.querySelector("#get-example").textContent =
     `GET /api/observacao?tema=${tema.value}\nAccept: application/json`;
@@ -29,7 +34,13 @@ async function enviar(url, options) {
             ...options,
             headers: { ...options.headers, Authorization: authorization },
         });
-        const data = await response.json();
+        const responseBody = await response.text();
+        let data;
+        try {
+            data = responseBody ? JSON.parse(responseBody) : { status: response.statusText };
+        } catch {
+            data = { resposta: responseBody };
+        }
         methodOutput.textContent = options.method;
         urlOutput.textContent = url;
         statusOutput.textContent = response.status;
