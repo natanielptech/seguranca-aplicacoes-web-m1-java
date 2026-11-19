@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -25,19 +27,19 @@ class ObservacaoControllerTest {
 
     @Test
     void getConsultaTemaPadraoETemasConhecidos() throws Exception {
-        mockMvc.perform(get("/api/observacao"))
+        mockMvc.perform(comoAdmin(get("/api/observacao")))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(jsonPath("$.tema").value("http"));
 
-        mockMvc.perform(get("/api/observacao").param("tema", "seguranca"))
+        mockMvc.perform(comoAdmin(get("/api/observacao").param("tema", "seguranca")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tema").value("seguranca"));
     }
 
     @Test
     void getRejeitaTemaDesconhecido() throws Exception {
-        mockMvc.perform(get("/api/observacao").param("tema", "desconhecido"))
+        mockMvc.perform(comoAdmin(get("/api/observacao").param("tema", "desconhecido")))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(jsonPath("$.erro").value(containsString("Tema inválido")));
@@ -45,32 +47,39 @@ class ObservacaoControllerTest {
 
     @Test
     void postValidaMensagemEDevolveSemArmazenar() throws Exception {
-        mockMvc.perform(post("/api/observacao")
+        mockMvc.perform(comoAdmin(post("/api/observacao")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"mensagem\":\" Olá \"}"))
+                        .content("{\"mensagem\":\" Olá \"}")))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(jsonPath("$.mensagem").value("Olá"))
                 .andExpect(jsonPath("$.aviso").value(containsString("não foi armazenada")));
 
-        mockMvc.perform(post("/api/observacao")
+        mockMvc.perform(comoAdmin(post("/api/observacao")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"mensagem\":\"  \"}"))
+                        .content("{\"mensagem\":\"  \"}")))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/api/observacao")
+        mockMvc.perform(comoAdmin(post("/api/observacao")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"mensagem\":\"" + "a".repeat(201) + "\"}"))
+                        .content("{\"mensagem\":\"" + "a".repeat(201) + "\"}")))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void metodoNaoPermitidoRetorna405EAllow() throws Exception {
-        mockMvc.perform(delete("/api/observacao"))
+        mockMvc.perform(comoAdmin(delete("/api/observacao")))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(header().string("Allow", "GET, POST"))
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.erro").value("Método não permitido."));
+    }
+
+    private org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder comoAdmin(
+            org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder request) {
+        String credentials = Base64.getEncoder().encodeToString(
+                "admin:admin123".getBytes(StandardCharsets.UTF_8));
+        return request.header("Authorization", "Basic " + credentials);
     }
 }

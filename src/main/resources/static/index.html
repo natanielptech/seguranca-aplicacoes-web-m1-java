@@ -14,7 +14,7 @@
         <p class="eyebrow">MÓDULO 1 · LABORATÓRIO</p>
         <h1>Observe como a web funciona</h1>
         <p>Experimente requisições reais e acompanhe o caminho entre navegador e servidor.</p>
-        <p class="notice">Use apenas dados fictícios. Este laboratório não possui login, sessão ou banco de dados.</p>
+        <p class="notice">Use apenas dados fictícios. A autenticação desta demonstração é local e não usa banco de dados.</p>
     </header>
 
     <section aria-labelledby="fluxo">
@@ -41,6 +41,22 @@
     <section aria-labelledby="experimente">
         <h2 id="experimente">Experimente na prática</h2>
         <p>Abra o DevTools (F12), selecione <strong>Network</strong> e compare estes quatro exemplos de requisição e resposta.</p>
+        <div class="card">
+            <h3>Autenticação e perfis de acesso</h3>
+            <p>As credenciais são enviadas em cada requisição usando HTTP Basic. Escolha um usuário para testar:</p>
+            <ul>
+                <li><code>leitor</code> / <code>leitor123</code> — perfil LEITOR: consulta (GET).</li>
+                <li><code>admin</code> / <code>admin123</code> — perfil ADMIN: consulta (GET) e envio (POST).</li>
+            </ul>
+            <label for="usuario">Usuário</label>
+            <select id="usuario">
+                <option value="leitor">leitor · LEITOR</option>
+                <option value="admin">admin · ADMIN</option>
+            </select>
+            <label for="senha">Senha de demonstração</label>
+            <input id="senha" type="password" autocomplete="current-password" value="leitor123">
+            <p>A API responde 401 sem credenciais válidas e 403 quando o perfil não tem permissão.</p>
+        </div>
         <div class="forms">
             <form class="card" id="get-form">
                 <h3>Exemplo 1 · GET válido</h3>

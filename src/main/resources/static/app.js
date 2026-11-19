@@ -1,5 +1,7 @@
 const tema = document.querySelector("#tema");
 const mensagem = document.querySelector("#mensagem");
+const usuario = document.querySelector("#usuario");
+const senha = document.querySelector("#senha");
 const placeholder = document.querySelector("#response-placeholder");
 const resultado = document.querySelector("#response-result");
 const methodOutput = document.querySelector("#response-method");
@@ -22,7 +24,11 @@ async function enviar(url, options) {
     buttons.forEach((button) => { button.disabled = true; });
 
     try {
-        const response = await fetch(url, options);
+        const authorization = `Basic ${btoa(`${usuario.value}:${senha.value}`)}`;
+        const response = await fetch(url, {
+            ...options,
+            headers: { ...options.headers, Authorization: authorization },
+        });
         const data = await response.json();
         methodOutput.textContent = options.method;
         urlOutput.textContent = url;
