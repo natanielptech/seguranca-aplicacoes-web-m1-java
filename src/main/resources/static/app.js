@@ -1,5 +1,8 @@
 const tema = document.querySelector("#tema");
 const mensagem = document.querySelector("#mensagem");
+const usuario = document.querySelector("#usuario");
+const senha = document.querySelector("#senha");
+const senhasDemo = { leitor: "leitor123", admin: "admin123" };
 const placeholder = document.querySelector("#response-placeholder");
 const resultado = document.querySelector("#response-result");
 const methodOutput = document.querySelector("#response-method");
@@ -7,6 +10,10 @@ const urlOutput = document.querySelector("#response-url");
 const statusOutput = document.querySelector("#response-status");
 const bodyOutput = document.querySelector("#response-body");
 const buttons = [...document.querySelectorAll("button")];
+
+usuario.addEventListener("change", () => {
+    senha.value = senhasDemo[usuario.value];
+});
 
 document.querySelector("#get-example").textContent =
     `GET /api/observacao?tema=${tema.value}\nAccept: application/json`;
@@ -22,8 +29,24 @@ async function enviar(url, options) {
     buttons.forEach((button) => { button.disabled = true; });
 
     try {
-        const response = await fetch(url, options);
-        const data = await response.json();
+        const headers = { ...options.headers };
+        if (options.method !== "GET") {
+            const csrfResponse = await fetch("/csrf");
+            const csrfToken = await csrfResponse.json();
+            headers[csrfToken.headerName] = csrfToken.token;
+        }
+        const authorization = `Basic ${btoa(`${usuario.value}:${senha.value}`)}`;
+        const response = await fetch(url, {
+            ...options,
+            headers: { ...headers, Authorization: authorization },
+        });
+        const responseBody = await response.text();
+        let data;
+        try {
+            data = responseBody ? JSON.parse(responseBody) : { status: response.statusText };
+        } catch {
+            data = { resposta: responseBody };
+        }
         methodOutput.textContent = options.method;
         urlOutput.textContent = url;
         statusOutput.textContent = response.status;

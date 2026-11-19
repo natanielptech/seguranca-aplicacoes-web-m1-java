@@ -23,7 +23,8 @@ mvn test
 
 A página apresenta quatro ações e permite conferir método, URL, status e JSON
 na área de resposta. Abra o DevTools do navegador (F12), selecione **Network**
-e execute cada exemplo.
+e execute cada exemplo. Ela também permite alternar entre dois perfis para
+observar autenticação e autorização.
 
 ### GET válido
 
@@ -59,9 +60,25 @@ São aceitas mensagens de 1 a 200 caracteres.
   `Allow: GET, POST`.
 - Todas as respostas da API incluem `Cache-Control: no-store`.
 
+## Exemplo de autenticação e autorização
+
+A API usa HTTP Basic e dois usuários em memória:
+
+| Usuário | Senha | Perfil | Permissões em `/api/observacao` |
+| --- | --- | --- | --- |
+| `leitor` | `leitor123` | `LEITOR` | GET |
+| `admin` | `admin123` | `ADMIN` | GET e POST |
+
+Sem credenciais válidas, a API responde `401 Unauthorized`. Um usuário
+autenticado sem permissão para a operação recebe `403 Forbidden`. Selecione o
+usuário na página e confira a requisição no DevTools: o navegador envia as
+credenciais no header `Authorization`.
+
 ## Limites de segurança
 
-Use somente dados fictícios. Este laboratório não possui autenticação,
-autorização, sessões, cookies de sessão ou persistência. A aplicação local usa
-HTTP; HTTPS protege o transporte, mas não substitui controles de segurança no
-servidor.
+Use somente dados fictícios. Os usuários e senhas são públicos, ficam apenas
+em memória e servem exclusivamente para demonstração local; não os reutilize
+nem use esta configuração em produção. A autenticação usa HTTP Basic sem
+sessão, e a aplicação local usa HTTP. Em produção, use HTTPS e credenciais
+gerenciadas com segurança; HTTPS protege o transporte, mas não substitui
+controles de segurança no servidor.
