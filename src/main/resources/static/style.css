@@ -1,0 +1,30 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #17243b;
+    background: #f3f6fb;
+    line-height: 1.5;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1050px; margin: auto; padding: 2rem 1rem 4rem; }
+section { margin-top: 2.5rem; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; margin: .5rem 0 1rem; }
+h2 { font-size: 1.55rem; }
+h3 { margin: .5rem 0; }
+p { margin: .5rem 0 1rem; }
+.hero { background: #132d50; color: white; border-radius: 1rem; padding: clamp(1.5rem, 4vw, 3rem); }
+.eyebrow { color: #9de7d7; font-weight: 700; letter-spacing: .1em; }
+.notice { border-left: 4px solid #9de7d7; padding-left: 1rem; margin-bottom: 0; }
+.steps, .forms { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card { background: white; border: 1px solid #dce4ef; border-radius: .75rem; padding: 1.25rem; }
+.number { display: inline-block; color: #006a5e; font-weight: 700; }
+label { display: block; font-weight: 600; margin-bottom: .35rem; }
+input, select, button { font: inherit; border-radius: .4rem; padding: .65rem; }
+input, select { display: block; width: 100%; border: 1px solid #8997aa; margin-bottom: 1rem; }
+button { background: #006a5e; color: white; border: 0; cursor: pointer; font-weight: 700; }
+button:hover { background: #004e46; }
+button:disabled { opacity: .6; cursor: wait; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 3px solid #e6a700; outline-offset: 2px; }
+.response { margin-top: 1rem; }
+pre { background: #132d50; color: #e2f6f1; padding: 1rem; border-radius: .5rem; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
