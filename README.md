@@ -1,13 +1,13 @@
 # Laboratório de Segurança de Aplicações Web — Módulo 1 (Java)
 
 Exemplo didático para observar como o navegador troca requisições HTTP com
-uma API. A aplicação usa **Java 17 e Spring Boot**, e funciona localmente sem
+uma API. A aplicação usa **Java 27 e Spring Boot**, e funciona localmente sem
 Vercel, banco de dados ou serviços externos. As mensagens recebidas não são
 armazenadas.
 
 ## Executar
 
-Tenha Java 17 ou superior e Maven instalados. Na raiz do projeto:
+Tenha Java 27 ou superior e Maven instalados. Na raiz do projeto:
 
 ```bash
 mvn spring-boot:run
