@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,9 @@ class ObservacaoControllerTest {
             org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder request) {
         String credentials = Base64.getEncoder().encodeToString(
                 "admin:admin123".getBytes(StandardCharsets.UTF_8));
-        return request.header("Authorization", "Basic " + credentials);
+        return request
+                .header("Authorization", "Basic " + credentials)
+                .cookie(new Cookie("XSRF-TOKEN", "test-csrf-token"))
+                .header("X-XSRF-TOKEN", "test-csrf-token");
     }
 }

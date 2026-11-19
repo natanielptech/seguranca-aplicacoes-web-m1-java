@@ -29,10 +29,16 @@ async function enviar(url, options) {
     buttons.forEach((button) => { button.disabled = true; });
 
     try {
+        const headers = { ...options.headers };
+        if (options.method !== "GET") {
+            const csrfResponse = await fetch("/csrf");
+            const csrfToken = await csrfResponse.json();
+            headers[csrfToken.headerName] = csrfToken.token;
+        }
         const authorization = `Basic ${btoa(`${usuario.value}:${senha.value}`)}`;
         const response = await fetch(url, {
             ...options,
-            headers: { ...options.headers, Authorization: authorization },
+            headers: { ...headers, Authorization: authorization },
         });
         const responseBody = await response.text();
         let data;
