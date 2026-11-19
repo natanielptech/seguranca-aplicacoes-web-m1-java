@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Laboratório local para observar requisições HTTP e respostas de uma API Spring Boot.">
+    <title>Observe como a web funciona · Laboratório Módulo 1</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+<main>
+    <header class="hero">
+        <p class="eyebrow">MÓDULO 1 · LABORATÓRIO</p>
+        <h1>Observe como a web funciona</h1>
+        <p>Experimente requisições reais e acompanhe o caminho entre navegador e servidor.</p>
+        <p class="notice">Use apenas dados fictícios. Este laboratório não possui login, sessão ou banco de dados.</p>
+    </header>
+
+    <section aria-labelledby="fluxo">
+        <h2 id="fluxo">O caminho de uma requisição</h2>
+        <div class="steps">
+            <article class="card">
+                <span class="number">1</span>
+                <h3>Navegador</h3>
+                <p>Você interage com a página e inicia uma requisição.</p>
+            </article>
+            <article class="card">
+                <span class="number">2</span>
+                <h3>HTTP / HTTPS</h3>
+                <p>Método, URL, headers e, às vezes, body viajam até o servidor.</p>
+            </article>
+            <article class="card">
+                <span class="number">3</span>
+                <h3>API</h3>
+                <p>O servidor valida a entrada e responde com um status e JSON.</p>
+            </article>
+        </div>
+    </section>
+
+    <section aria-labelledby="experimente">
+        <h2 id="experimente">Experimente na prática</h2>
+        <p>Abra o DevTools (F12), selecione <strong>Network</strong> e compare estes quatro exemplos de requisição e resposta.</p>
+        <div class="forms">
+            <form class="card" id="get-form">
+                <h3>Exemplo 1 · GET válido</h3>
+                <p>Consulta um tema. O valor selecionado aparece como parâmetro na URL.</p>
+                <pre><code id="get-example"></code></pre>
+                <label for="tema">Tema</label>
+                <select id="tema">
+                    <option value="http">HTTP</option>
+                    <option value="api">API</option>
+                    <option value="seguranca">Segurança</option>
+                </select>
+                <button type="submit">Enviar GET · esperado 200</button>
+            </form>
+
+            <form class="card" id="post-form">
+                <h3>Exemplo 2 · POST válido</h3>
+                <p>A mensagem vai no body JSON. Uma resposta 201 indica envio aceito, não armazenamento permanente.</p>
+                <pre><code>POST /api/observacao
+Content-Type: application/json
+
+{"mensagem":"Olá, mundo!"}</code></pre>
+                <label for="mensagem">Mensagem fictícia</label>
+                <input id="mensagem" maxlength="200" required placeholder="Olá, mundo!">
+                <button type="submit">Enviar POST · esperado 201</button>
+            </form>
+
+            <div class="card">
+                <h3>Exemplo 3 · parâmetro inválido</h3>
+                <p>O servidor valida o tema recebido e responde 400 quando ele não é permitido.</p>
+                <pre><code>GET /api/observacao?tema=desconhecido
+
+Resposta: 400 Bad Request</code></pre>
+                <button id="invalid-get" type="button">Enviar GET inválido · esperado 400</button>
+            </div>
+
+            <div class="card">
+                <h3>Exemplo 4 · método não permitido</h3>
+                <p>A API aceita GET e POST. Para outro método, responde 405 e informa os métodos aceitos.</p>
+                <pre><code>DELETE /api/observacao
+
+Resposta: 405 Method Not Allowed
+Allow: GET, POST</code></pre>
+                <button id="delete-request" type="button">Enviar DELETE · esperado 405</button>
+            </div>
+        </div>
+        <div class="card response" aria-live="polite">
+            <h3>Resposta da API</h3>
+            <p id="response-placeholder">Escolha uma ação para ver a resposta aqui.</p>
+            <div id="response-result" hidden>
+                <p><strong id="response-method"></strong> <span id="response-url"></span> · Status <strong id="response-status"></strong></p>
+                <pre id="response-body"></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="seguranca">
+        <h2 id="seguranca">Perguntas de segurança</h2>
+        <ul>
+            <li>Quais dados você controla na URL ou no body?</li>
+            <li>O servidor valida os dados recebidos?</li>
+            <li>Quem poderia acessar essa resposta?</li>
+            <li>Em produção, a comunicação utiliza HTTPS?</li>
+        </ul>
+        <p>HTTPS protege o transporte, mas não substitui autenticação, autorização ou validação no servidor.</p>
+    </section>
+</main>
+</body>
+</html>
