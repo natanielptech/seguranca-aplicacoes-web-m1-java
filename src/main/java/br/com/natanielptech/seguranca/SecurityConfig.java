@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/observacao").hasAnyRole("LEITOR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/observacao").hasRole("ADMIN")
                         .requestMatchers("/api/observacao").hasAnyRole("LEITOR", "ADMIN")
+                        .requestMatchers("/api/**").denyAll()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .build();
